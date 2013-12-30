@@ -175,7 +175,7 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
     NSPoint point;
     point.x = (start + i < 10 ? bounds.origin.x + 3 * kCharacterWidth - 1 : (start + i < 100 ? bounds.origin.x + 2 * kCharacterWidth - 1 : bounds.origin.x + kCharacterWidth - 1));
     point.y = (aRect.origin.y / kLineHeight + i) * kLineHeight - offset;
-    [[NSString stringWithFormat:@"%lu", start + i] drawAtPoint:point withAttributes:attributes];
+    [[NSString stringWithFormat:@"%lu", (long)(start + i)] drawAtPoint:point withAttributes:attributes];
   }
 }
 
@@ -183,8 +183,8 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
 
 @implementation SourceTextView
 
-@synthesize showLineNumbers=_showLineNumbers, language=_language, keywordColors=_keywordColors, stringColor=_stringColor,
-            commentColor=_commentColor, preprocessorColor=_preprocessorColor, errorHighlightColor=_errorHighlightColor;
+@synthesize showLineNumbers=_showLines, language=_language, keywordColors=_keywordColors, stringColor=_stringColor,
+            commentColor=_commentColor, preprocessorColor=_preprocessorColor, errorHighlightColor=_errorColor;
 
 + (NSMutableDictionary*) keywordColorsFromKeywordsPropertyList:(NSString*)path {
   NSMutableDictionary* dictionary = [NSMutableDictionary dictionary];
