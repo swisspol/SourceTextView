@@ -26,7 +26,7 @@
 		E22A4F1518711D5000575281 /* SourceTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SourceTextView.h; sourceTree = "<group>"; };
 		E22A4F1618711D5000575281 /* SourceTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SourceTextView.m; sourceTree = "<group>"; };
 		E22A4F181871207A00575281 /* Keyword-Colors */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Keyword-Colors"; path = "../Keyword-Colors"; sourceTree = "<group>"; };
-		E22A4F1C1871227200575281 /* Source.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Source.lua; sourceTree = SOURCE_ROOT; };
+		E22A4F1C1871227200575281 /* Source.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Source.lua; path = Resources/Source.lua; sourceTree = SOURCE_ROOT; };
 		E2CF2CF418711B8300ED5355 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
