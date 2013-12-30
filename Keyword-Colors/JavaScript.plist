@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>color-red</key>
+		<integer>0</integer>
+		<key>color-green</key>
+		<real>0.21</real>
+		<key>color-blue</key>
+		<real>0.8</real>
+		<key>keywords</key>
+		<string>
+			this undefined null
+			true false Infinity
+		</string>
+	</dict>
+	<dict>
+		<key>color-red</key>
+		<real>0.14</real>
+		<key>color-green</key>
+		<real>0.43</real>
+		<key>color-bllue</key>
+		<real>0.15</real>
+		<key>keywords</key>
+		<string>
+			function switch do for while in if else return break continue case default with try catch finally throw
+		</string>
+	</dict>
+	<dict>
+		<key>color-red</key>
+		<string>0.33</string>
+		<key>color-green</key>
+		<string>0.26</string>
+		<key>color-blue</key>
+		<string>0.72</string>
+		<key>keywords</key>
+		<string>
+			const var new typeof parseInt parseFloat constructor prototype
+			Array concat join length pop push reverse shift slice sort toSource unshift
+			Boolean
+			Date getFullYear getYear getMonth getDate getDay getHours getMinutes getSeconds getMilliseconds getTime getTimezoneOffset getUTCFullYear getUTCMonth getUTCDate getUTCDay getUTCHours getUTCMinutes getUTCSeconds getUTCMilliseconds setFullYear setYear setMonth setDate setHours setMinutes setSeconds setMilliseconds setTime setUTCFullYear setUTCMonth setUTCDate setUTCHours setUTCMinutes setUTCSeconds setUTCMilliseconds toGMTString toLocaleString toLocaleDateString toLocaleTimeString toUTCString parse UTC
+			Function Arguments caller length apply call
+			Math abs acos asin atan atan2 ceil cos exp floor log max min pow random round sin sqrt tan LN2 LN10 LOG2E LOG10E PI SQRT1_2 SQRT2
+			Number toExponential toFixed toPrecision MAX_VALUE MIN_VALUE NEGATIVE_INFINITY POSITIVE_INFINITY NaN
+			Object hasOwnProperty isPrototypeOf propertyIsEnumerable toLocalString toString valueOf
+			String length charAt charChodeAt concat fromCharCode indexOf lastIndexOf match replace search slice split substr substring toLowerCase to UpperCase
+			RegExp global ignoreCase lastIndex multiline source exec test
+		</string>
+	</dict>
+</array>
+</plist>
