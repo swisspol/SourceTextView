@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013, Pierre-Olivier Latour
+ Copyright (c) 2013-2016, Pierre-Olivier Latour
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -25,15 +25,9 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <AppKit/AppKit.h>
-
 #import "SourceTextView.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate> {
-@private
-  NSWindow* _mainWindow;
-  SourceTextView* _sourceTextView;
-}
-@property(nonatomic, assign) IBOutlet NSWindow* mainWindow;
-@property(nonatomic, assign) IBOutlet SourceTextView* sourceTextView;
+@interface AppDelegate : NSObject <NSApplicationDelegate>
+@property(nonatomic, weak) IBOutlet NSWindow* mainWindow;
+@property(nonatomic, strong) IBOutlet SourceTextView* sourceTextView;  // Does not support weak references
 @end

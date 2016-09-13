@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013, Pierre-Olivier Latour
+ Copyright (c) 2013-2016, Pierre-Olivier Latour
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -36,16 +36,7 @@ typedef enum {
   kSourceTextViewLanguage_ShellScript
 } SourceTextViewLanguage;
 
-@interface SourceTextView : NSTextView {
-@private
-  SourceTextViewLanguage _language;
-  BOOL _showLines;
-  NSDictionary* _keywordColors;
-  NSColor* _stringColor;
-  NSColor* _commentColor;
-  NSColor* _preprocessorColor;
-  NSColor* _errorColor;
-}
+@interface SourceTextView : NSTextView
 + (NSMutableDictionary*)keywordColorsFromKeywordsPropertyList:(NSString*)path;
 
 @property(nonatomic) SourceTextViewLanguage language;

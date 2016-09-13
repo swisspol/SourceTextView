@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013, Pierre-Olivier Latour
+ Copyright (c) 2013-2016, Pierre-Olivier Latour
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -27,19 +27,11 @@
 
 #import "SourceTextView.h"
 
-#if 1  // 10.6 or later
 #define kFontName @"Menlo Regular"
 #define kFontSize 11
 #define kCharacterWidth 7
 #define kLineHeight 13
 #define kRulerThickness 38
-#else // 10.5 or earlier
-#define kFontName @"Monaco"
-#define kFontSize 10
-#define kCharacterWidth 6
-#define kLineHeight 14
-#define kRulerThickness 34
-#endif
 
 typedef enum {
   kSourceToken_Code = 0,
@@ -55,24 +47,21 @@ typedef void (*SourceTokenCallback)(NSString* source, SourceToken token, NSRange
 @interface SourceTextView () <NSTextViewDelegate>
 @end
 
-@interface SourceRulerView : NSRulerView {
-@private
-  SourceTextView* _sourceView;  // Not retained
-}
-- (void)setSourceView:(SourceTextView*)view;
+@interface SourceRulerView : NSRulerView
+@property(nonatomic, assign) SourceTextView* sourceView;
 @end
 
 static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange range, void* userInfo) {
-  SourceTextView* view = (SourceTextView*)userInfo;
+  SourceTextView* view = (__bridge SourceTextView*)userInfo;
   static NSCharacterSet* characters = nil;
   static NSCharacterSet* charactersInverted = nil;
   NSColor* color;
   
   if (characters == nil) {
-    characters = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789#ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"] retain];
+    characters = [NSCharacterSet characterSetWithCharactersInString:@"0123456789#ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"];
   }
   if (charactersInverted == nil) {
-    charactersInverted = [[characters invertedSet] retain];
+    charactersInverted = [characters invertedSet];
   }
   
   switch (token) {
@@ -151,10 +140,10 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
   NSRect bounds = [self bounds];
   
   if (backColor == nil) {
-    backColor = [[NSColor colorWithDeviceRed:0.90 green:0.90 blue:0.90 alpha:1.0] retain];
+    backColor = [NSColor colorWithDeviceRed:0.90 green:0.90 blue:0.90 alpha:1.0];
   }
   if (lineColor == nil) {
-    lineColor = [[NSColor grayColor] retain];
+    lineColor = [NSColor grayColor];
   }
   if (attributes == nil) {
     attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSColor darkGrayColor], NSForegroundColorAttributeName, [NSFont systemFontOfSize:kFontSize], NSFontAttributeName, nil];
@@ -183,14 +172,11 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
 
 @implementation SourceTextView
 
-@synthesize showLineNumbers=_showLines, language=_language, keywordColors=_keywordColors, stringColor=_stringColor,
-            commentColor=_commentColor, preprocessorColor=_preprocessorColor, errorHighlightColor=_errorColor;
-
 + (NSMutableDictionary*) keywordColorsFromKeywordsPropertyList:(NSString*)path {
   NSMutableDictionary* dictionary = [NSMutableDictionary dictionary];
   
   // Read the plist file
-  NSArray* array = [NSPropertyListSerialization propertyListFromData:[NSData dataWithContentsOfFile:path] mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:NULL];
+  NSArray* array = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:path] options:NSPropertyListImmutable format:NULL error:NULL];
   if (![array isKindOfClass:[NSArray class]]) {
     return nil;
   }
@@ -391,11 +377,11 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
   
   [self setDelegate:self];
   _language = kSourceTextViewLanguage_Undefined;
-  _showLines = YES;
-  _stringColor = [[NSColor colorWithDeviceRed:0.6 green:0.3 blue:0.0 alpha:1.0] retain];
-  _commentColor = [[NSColor darkGrayColor] retain];
-  _preprocessorColor = [[NSColor blueColor] retain];
-  _errorColor = [[NSColor colorWithDeviceRed:1.0 green:0.4 blue:0.5 alpha:1.0] retain];
+  _showLineNumbers = YES;
+  _stringColor = [NSColor colorWithDeviceRed:0.6 green:0.3 blue:0.0 alpha:1.0];
+  _commentColor = [NSColor darkGrayColor];
+  _preprocessorColor = [NSColor blueColor];
+  _errorHighlightColor = [NSColor colorWithDeviceRed:1.0 green:0.4 blue:0.5 alpha:1.0];
   [self setFont:[NSFont fontWithName:kFontName size:kFontSize]];
   [self setSmartInsertDeleteEnabled:NO];
   [self setAllowsUndo:YES];
@@ -425,16 +411,6 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
     [self _finishInitialization];
   }
   return self;
-}
-
-- (void)dealloc {
-  [_keywordColors release];
-  [_stringColor release];
-  [_commentColor release];
-  [_preprocessorColor release];
-  [_errorColor release];
-  
-  [super dealloc];
 }
 
 - (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)anItem {
@@ -485,16 +461,16 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
 }
 
 - (void)setShowLineNumbers:(BOOL)flag {
-  if (flag != _showLines) {
+  if (flag != _showLineNumbers) {
     [self _showLineNumbers:flag];
-    _showLines = flag;
+    _showLineNumbers = flag;
   }
 }
 
 - (void)viewDidMoveToSuperview {
   NSScrollView* scrollView = (NSScrollView*)[[self superview] superview];
   
-  [self _showLineNumbers:_showLines];
+  [self _showLineNumbers:_showLineNumbers];
   
   if ([scrollView isKindOfClass:[NSScrollView class]]) {
     [scrollView setLineScroll:kLineHeight];
@@ -556,19 +532,19 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
   }
 }
 
-- (void)textDidChange:(NSNotification*)notification {
+- (void)_textDidChange {
   NSString* string = [self string];
   NSRange range = NSMakeRange(0, [string length]);
-  
+
   [self setTextColor:nil range:range];
-  [SourceTextView _parseSource:string range:range language:_language callback:_SourceColorizeCallback userInfo:self];
-  
+  [SourceTextView _parseSource:string range:range language:_language callback:_SourceColorizeCallback userInfo:(__bridge void*)self];
+
   [self _highlightAllLinesWithColor:nil];
 }
 
 - (void)setErrorLine:(NSUInteger)line {
   if (line > 0) {
-    [self _highlightLine:(line - 1) withColor:_errorColor];
+    [self _highlightLine:(line - 1) withColor:_errorHighlightColor];
   } else {
     [self _highlightAllLinesWithColor:nil];
   }
@@ -576,13 +552,13 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
 
 - (void)setLanguage:(SourceTextViewLanguage)language {
   _language = language;
-  [self textDidChange:nil];
+  [self _textDidChange];
 }
 
 - (void)setSource:(NSString*)source {
   if (![source isEqualToString:[self string]]) {
     [self setString:([source length] ? source : @"")];
-    [self textDidChange:nil];
+    [self _textDidChange];
   }
 }
 
@@ -591,48 +567,39 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
 }
 
 - (void)setKeywordColors:(NSDictionary*)keywords {
-  if (keywords != _keywordColors) {
-    [_keywordColors release];
-    _keywordColors = [keywords copy];
-    
-    [self textDidChange:nil];
-  }
+  _keywordColors = [keywords copy];
+  
+  [self _textDidChange];
 }
 
 - (void)setStringColor:(NSColor*)color {
-  if (color != _stringColor) {
-    [_stringColor release];
-    _stringColor = [[color colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
-    
-    [self textDidChange:nil];
-  }
+  _stringColor = [color colorUsingColorSpaceName:NSDeviceRGBColorSpace];
+  
+  [self _textDidChange];
 }
 
 - (void)setCommentColor:(NSColor*)color {
-  if (color != _commentColor) {
-    [_commentColor release];
-    _commentColor = [[color colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
-    
-    [self textDidChange:nil];
-  }
+  _commentColor = [color colorUsingColorSpaceName:NSDeviceRGBColorSpace];
+  
+  [self _textDidChange];
 }
 
 - (void)setPreprocessorColor:(NSColor*)color {
-  if (color != _preprocessorColor) {
-    [_preprocessorColor release];
-    _preprocessorColor = [[color colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
-    
-    [self textDidChange:nil];
-  }
+  _preprocessorColor = [color colorUsingColorSpaceName:NSDeviceRGBColorSpace];
+  
+  [self _textDidChange];
 }
 
 - (void) setErrorHighlightColor:(NSColor*)color {
-  if (color != _errorColor) {
-    [_errorColor release];
-    _errorColor = [[color colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
-    
-    [self textDidChange:nil];
-  }
+  _errorHighlightColor = [color colorUsingColorSpaceName:NSDeviceRGBColorSpace];
+  
+  [self _textDidChange];
+}
+
+#pragma mark - NSTextViewDelegate
+
+- (void)textDidChange:(NSNotification*)notification {
+  [self _textDidChange];
 }
 
 @end
