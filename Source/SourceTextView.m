@@ -384,6 +384,10 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
   _errorHighlightColor = [NSColor colorWithDeviceRed:1.0 green:0.4 blue:0.5 alpha:1.0];
   [self setFont:[NSFont fontWithName:kFontName size:kFontSize]];
   [self setSmartInsertDeleteEnabled:NO];
+  [self setAutomaticQuoteSubstitutionEnabled:NO];
+  [self setAutomaticDashSubstitutionEnabled:NO];
+  [self setAutomaticTextReplacementEnabled:NO];
+  [self setAutomaticSpellingCorrectionEnabled:NO];
   [self setAllowsUndo:YES];
   
 #if 0
