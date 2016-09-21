@@ -146,7 +146,7 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
     lineColor = [NSColor grayColor];
   }
   if (attributes == nil) {
-    attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSColor darkGrayColor], NSForegroundColorAttributeName, [NSFont systemFontOfSize:kFontSize], NSFontAttributeName, nil];
+    attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSColor darkGrayColor], NSForegroundColorAttributeName, [NSFont fontWithName:kFontName size:kFontSize], NSFontAttributeName, nil];
   }
   
   [backColor set];
@@ -162,8 +162,8 @@ static void _SourceColorizeCallback(NSString* source, SourceToken token, NSRange
 #endif
   for (NSUInteger i = 0; i < aRect.size.height / kLineHeight + 1; ++i) {
     NSPoint point;
-    point.x = (start + i < 10 ? bounds.origin.x + 3 * kCharacterWidth - 1 : (start + i < 100 ? bounds.origin.x + 2 * kCharacterWidth - 1 : bounds.origin.x + kCharacterWidth - 1));
-    point.y = (aRect.origin.y / kLineHeight + i) * kLineHeight - offset;
+    point.x = (start + i < 10 ? bounds.origin.x + 4 * kCharacterWidth - 1 : (start + i < 100 ? bounds.origin.x + 3 * kCharacterWidth - 1 : (start + i < 1000 ? bounds.origin.x + 2 * kCharacterWidth - 1 : bounds.origin.x + 1 * kCharacterWidth - 1)));
+    point.y = (aRect.origin.y / kLineHeight + i) * kLineHeight - offset - 4;
     [[NSString stringWithFormat:@"%lu", (long)(start + i)] drawAtPoint:point withAttributes:attributes];
   }
 }
